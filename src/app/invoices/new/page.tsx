@@ -1,20 +1,32 @@
-import { Button } from "@/components/ui/button";
+"use client"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { sql } from "drizzle-orm";
-import { db } from "@/DB";
+import { createAction } from "@/app/action";
+import { startTransition, SyntheticEvent, useState } from "react";
+import SubmitButton from "@/components/ui/SubmitButton";
+import Form from "next/form"
  
-const page = async () => {
-  const res = await db.execute(sql`SELECT current_database()`)
+const page =  () => {
+const[state,setState]=  useState('ready')
+  const handleOnSubmit =async (event: SyntheticEvent) => {
+    
+    if (state === 'pending') {
+      event.preventDefault()
+      return
+    }
+    setState('pending')
+    
+    
+}
+
   return (
     <main className="flex flex-col my-12 h-screen gap-6  max-w-5xl mx-auto">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold">Create Invoice</h1>
       </div>
-
-      {JSON.stringify(res)}
-      <form className="grid gap-4 max-w-xs">
+     
+      <Form action={createAction} onSubmit={handleOnSubmit} className="grid gap-4 max-w-xs">
         <div>
           <Label htmlFor="name" className="block mb-2 font-semibold text-sm">Billing Name</Label>
           <Input id="name" name="name" type="text" />
@@ -32,11 +44,9 @@ const page = async () => {
           <Textarea id="description" name="description" />
         </div>
         <div>
-          <Button className="w-full font-semibold">
-            Submit
-          </Button>
+          <SubmitButton/>
         </div>
-      </form>
+      </Form>
     </main>
   );
 };

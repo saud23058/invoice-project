@@ -11,8 +11,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { db } from "@/DB";
+import { invoices } from "@/DB/schema";
+import { cn } from "@/lib/utils";
 
-const page = () => {
+const page = async() => {
+  const result = await db.select().from(invoices)
+  
+  
   return (
     <main className="flex flex-col my-12 h-screen gap-6 text-center max-w-5xl mx-auto">
       <div className="flex justify-between">
@@ -39,24 +45,32 @@ const page = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell className="font-medium text-left p-4">
-              <span className="font-semibold">10/31/2024</span>
-            </TableCell>
-            <TableCell className="text-left p-4">
-              <span className="font-semibold">Saud</span>
-            </TableCell>
-            <TableCell className="text-left p-4">
-              <span className="">saud@gmail.com</span>
-            </TableCell>
-            <TableCell className="text-center p-4">
-              <Badge className="rounded-full">Open</Badge>
-            </TableCell>
-
-            <TableCell className="text-right p-4">
-              <span className="font-semibold">$250.00</span>
-            </TableCell>
-          </TableRow>
+          {result.map(res => {
+            return (<TableRow key={res.id}>
+              <TableCell className="font-medium text-left p-4">
+                <Link href={`/invoices/${res.id}`} className="font-semibold">{new Date(res.createTs).toLocaleDateString()}</Link>
+              </TableCell>
+              <TableCell className="text-left p-4">
+                <Link href={`/invoices/${res.id}`} className="font-semibold">Saud</Link>
+              </TableCell>
+              <TableCell className="text-left p-4">
+                <Link href={`/invoices/${res.id}`} className="">saud@gmail.com</Link>
+              </TableCell>
+              <TableCell className="text-center p-4">
+                <Link href={`/invoices/${res.id}`}><Badge className={cn(
+                "rounded-full capitalize",
+                res.status === "open" && "bg-blue-500",
+                res.status  === "paid" && "bg-green-600",
+                res.status  === "void" && "bg-zinc-700",
+                res.status  === "uncollectible" && "bg-red-600",
+              )}>{res.status }</Badge></Link>
+              </TableCell>
+  
+              <TableCell className="text-right p-4">
+                <Link href={`/invoices/${res.id}`} className="font-semibold">{(res.value/100).toFixed(2) }</Link>
+              </TableCell>
+            </TableRow>)
+          })}
         </TableBody>
       </Table>
     </main>
