@@ -3,9 +3,10 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createAction } from "@/app/action";
-import { startTransition, SyntheticEvent, useState } from "react";
-import SubmitButton from "@/components/ui/SubmitButton";
+import {  SyntheticEvent, useState } from "react";
+import SubmitButton from "@/components/SubmitButton";
 import Form from "next/form"
+import Container from "@/components/Container";
  
 const page =  () => {
 const[state,setState]=  useState('ready')
@@ -21,8 +22,9 @@ const[state,setState]=  useState('ready')
 }
 
   return (
-    <main className="flex flex-col my-12 h-screen gap-6  max-w-5xl mx-auto">
-      <div className="flex justify-between">
+    <main className=" my-12 h-full ">
+      <Container>
+      <div className="flex justify-between mb-6">
         <h1 className="text-3xl font-bold">Create Invoice</h1>
       </div>
      
@@ -46,7 +48,8 @@ const[state,setState]=  useState('ready')
         <div>
           <SubmitButton/>
         </div>
-      </Form>
+        </Form>
+        </Container>
     </main>
   );
 };

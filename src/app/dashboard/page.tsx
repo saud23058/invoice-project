@@ -14,15 +14,17 @@ import Link from "next/link";
 import { db } from "@/DB";
 import { invoices } from "@/DB/schema";
 import { cn } from "@/lib/utils";
+import Container from "@/components/Container";
 
 const page = async() => {
   const result = await db.select().from(invoices)
   
   
   return (
-    <main className="flex flex-col my-12 h-screen gap-6 text-center max-w-5xl mx-auto">
+    <main className=" h-full ">
+      <Container>
       <div className="flex justify-between">
-        <h1 className="text-3xl font-bold">Invoices</h1>
+        <h1 className="text-3xl font-bold mb-6">Invoices</h1>
         <p>
           <Button className="inline-flex gap-2" variant='ghost' asChild>
             <Link href="invoices/new">
@@ -72,7 +74,8 @@ const page = async() => {
             </TableRow>)
           })}
         </TableBody>
-      </Table>
+        </Table>
+        </Container>
     </main>
   );
 };

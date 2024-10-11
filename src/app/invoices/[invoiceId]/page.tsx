@@ -3,10 +3,19 @@ import { db } from "@/DB";
 import { invoices } from "@/DB/schema";
 import { cn } from "@/lib/utils";
 import { eq } from "drizzle-orm";
+import { notFound } from "next/navigation";
 
 const Page = async ({ params }: { params: { invoiceId: string } }) => {
-  const invoiceId = Number(params.invoiceId);
+  const invoiceId = parseInt(params.invoiceId);
+
+  if (isNaN(invoiceId)) {
+    throw new Error("Invalid Id")
+  }
   const [result] = await db.select().from(invoices).where(eq(invoices.id, invoiceId)).limit(1);
+
+  if (!result) {
+    notFound()
+  }
   
   return (
     <main className="h-full max-w-5xl mx-auto my-12">
